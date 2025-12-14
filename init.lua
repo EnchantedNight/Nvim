@@ -1,4 +1,3 @@
-require("autocmds")
 require("keymaps")
 require("options")
 
@@ -12,8 +11,7 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{
 		src = "https://github.com/saghen/blink.cmp",
-		dependencies = { "hrsh7th/nvim-cmp" },
-		-- build = "cargo +nightly build --release",
+		-- cargo +nightly build --release
 	},
 	{ src = "https://github.com/stevearc/oil.nvim" },
 })
@@ -27,113 +25,12 @@ require("tokyonight").setup({
 	},
 })
 
-vim.lsp.config("vtsls", {
-	settings = {
-		vtsls = {
-			tsserver = {
-				globalPlugins = {
-					{
-						name = "@vue/typescript-plugin",
-						location = "/usr/lib/node_modules/@vue/typescript-plugin",
-						languages = { "vue" },
-						configNamespace = "typescript",
-					},
-				},
-			},
-		},
-	},
-	filetypes = {
-		"typescript",
-		"javascript",
-		"vue",
-	},
-})
-
-vim.lsp.config("vue_ls", {
-	settings = {
-		init_options = {
-			typescript = {
-				tsdk = "",
-			},
-		},
-	},
-})
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snipperSupport = true
-
-vim.lsp.config("cssls", {
-	filetypes = { "css", "scss" },
-	capabilities = capabilities,
-	settings = {
-		css = {
-			validate = true,
-		},
-		scss = {
-			validate = true,
-		},
-	},
-})
-
-vim.lsp.config("html", {
-	filetypes = { "html" },
-	capabilities = capabilities,
-	settings = {
-		html = {
-			format = {
-				enable = true,
-				wrapLineLength = 120,
-				wrapAttributes = "auto",
-			},
-			hover = {
-				documentation = true,
-				references = true,
-			},
-			validate = { scripts = true, styles = true },
-		},
-	},
-})
-
-vim.lsp.config("tailwindcss", {
-	filetypes = {
-		"html",
-		"css",
-		"typescript",
-		"javascript",
-		"vue",
-	},
-	settings = {
-		validate = false,
-		tailwindCSS = {
-			includeLanguages = {
-				html = "html",
-				vue = "vue",
-			},
-		},
-	},
-})
+vim.cmd("colorscheme tokyonight")
+vim.cmd(":hi statusline guibg=NONE")
 
 vim.lsp.enable({
-	"html",
-	"cssls",
 	"lua_ls",
 	"clangd",
-	"tailwindcss",
-	"vue_ls",
-	"vtsls",
-})
-
-vim.api.nvim_create_autocmd("LspAttach", {
-	callback = function(ev)
-		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-		if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_completion) then
-			vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
-			vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-			vim.keymap.set("i", "<C-Space>", function()
-				vim.lsp.completion.get()
-			end)
-		end
-	end,
 })
 
 vim.diagnostic.config({
@@ -150,10 +47,8 @@ vim.diagnostic.config({
 	},
 })
 
-vim.cmd("colorscheme tokyonight")
-vim.cmd(":hi statusline guibg=NONE")
-
 require("oil").setup()
+require("nvim-autopairs").setup()
 
 require("conform").setup({
 	format_on_save = {
@@ -162,17 +57,10 @@ require("conform").setup({
 	},
 
 	formatters_by_ft = {
-		javascript = { "prettier" },
-		typescript = { "prettier" },
-		vue = { "prettier" },
 		c = { "clang_format" },
 		lua = { "stylua" },
-		css = { "prettier" },
-		html = { "prettier" },
 	},
 })
-
-require("nvim-autopairs").setup()
 
 require("Comment").setup({
 	toggler = {
@@ -190,10 +78,7 @@ require("nvim-treesitter.configs").setup({
 	event = { "BufReadPost", "BufNewFile" },
 	ensure_installed = {
 		"c",
-		"vue",
 		"lua",
-		"javascript",
-		"typescript",
 	},
 	sync_install = false,
 	auto_install = true,
@@ -242,27 +127,13 @@ require("blink.cmp").setup({
 			auto_show_delay_ms = 500,
 		},
 	},
-	keymap = {
-		[""] = {},
-	},
 })
 
 require("toggleterm").setup({
 	direction = "float",
 	start_in_insert = true,
 	close_on_exit = true,
-	persist_mode = false,
 	float_opts = {
 		border = "rounded",
 	},
 })
-
-local Terminal = require("toggleterm.terminal").Terminal
-local float_term = Terminal:new({
-	direction = "float",
-	hidden = true,
-})
-
-vim.keymap.set({ "n", "t" }, "<C-`>", function()
-	float_term:toggle()
-end, { noremap = true, silent = true })

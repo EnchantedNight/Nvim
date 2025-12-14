@@ -40,3 +40,11 @@ vim.api.nvim_set_keymap("i", "<C-z>", "<C-o>u", opts)
 vim.api.nvim_set_keymap("i", "<C-y>", "<C-o><C-r>", opts)
 
 vim.api.nvim_set_keymap("n", "<C-e>", ":Oil<CR>", opts)
+
+vim.keymap.set({ "n", "t" }, "<C-`>", function()
+	if vim.b.toggle_number then
+		require("toggleterm.terminal").get(vim.b.toggle_number):shutdown()
+	else
+		require("toggleterm.terminal").Terminal:new():open()
+	end
+end, opts)
