@@ -168,7 +168,6 @@ require("conform").setup({
 		c = { "clang_format" },
 		lua = { "stylua" },
 		css = { "prettier" },
-		scss = { "prettier" },
 		html = { "prettier" },
 	},
 })
