@@ -119,7 +119,6 @@ vim.lsp.enable({
 	"lua_ls",
 	"clangd",
 	"tailwindcss",
-	"prismals",
 	"vue_ls",
 	"vtsls",
 })
@@ -196,7 +195,6 @@ require("nvim-treesitter.configs").setup({
 		"lua",
 		"javascript",
 		"typescript",
-		"prisma",
 	},
 	sync_install = false,
 	auto_install = true,
