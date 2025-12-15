@@ -31,6 +31,7 @@ vim.cmd(":hi statusline guibg=NONE")
 vim.lsp.enable({
 	"lua_ls",
 	"clangd",
+	"rust_analyzer",
 })
 
 vim.diagnostic.config({
@@ -59,6 +60,7 @@ require("conform").setup({
 	formatters_by_ft = {
 		c = { "clang_format" },
 		lua = { "stylua" },
+		rs = { "rustfmt" },
 	},
 })
 
@@ -79,6 +81,7 @@ require("nvim-treesitter.configs").setup({
 	ensure_installed = {
 		"c",
 		"lua",
+		"rust",
 	},
 	sync_install = false,
 	auto_install = true,
